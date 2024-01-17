@@ -1,0 +1,125 @@
+*{
+	margin: 0; 
+    padding: 0;
+	font-family: Arial;
+	box-sizing: border-box;
+	}
+	
+	body {background-color: grey;
+	}
+
+	
+	#wrapper {
+		max-width: 1358px;
+		margin: 0 auto;
+		background-color: white;
+	}
+	
+	header img {width: 100%; 
+	            display: block;
+	}
+	
+	nav {
+		background-color: #CD7F32;
+	}
+	
+	
+	a.menu {
+		display: inline-block;
+		width: 33%;
+		padding: 15px 30px;
+		color: white;
+		text-decoration: none;
+		text-align: center;
+	}
+	a.menu:hover {
+		background-color: crimson;
+	}
+	.active (
+        background-color: crimson;	
+	)
+	
+	article {
+		margin-top: 30px;
+		margin-bottom: 20px;
+	}
+	
+	article h1 {
+		font-size:30px;
+		text-align: center;
+		margin: 0 10% 20px;
+		padding-top: 20px;
+		padding-bottom: 15px;
+		border-bottom: 2px solid crimson;
+	}
+	
+	article h2 {
+		font-size:25px;
+		text-align: center;
+		margin: 0 10% 20px;
+		padding-top: 15px;
+		border-bottom: 2px solid crimson;
+		
+	}
+	
+	img.left{
+		float:left;
+		padding: 10px;
+		width: 25%;
+		
+
+	}
+	
+	
+	
+	article p {
+		border: 2px #CD7F32;
+		float:right;
+		line-height: 25px;
+		font-size: 18px;
+		padding: 15px 15px;
+		text-align:justify;
+		hight:100%;
+	}
+	
+	footer {
+		height:40px;
+		background-color: #CD7F32;
+		color: white;
+		line-height: 40px;
+		text-align:center;
+		margin-top: 500px;
+	}
+	a.back {
+		color:white;
+		background-color: #CD7F32;
+		text-decoration: none;
+		text-align: center;
+		
+	}
+	a.back:hover{
+       background-color:crimson;
+	}
+	
+	a.go{
+		color:white;
+		background-color: #CD7F32;
+		text-decoration: none;
+		text-align: center;
+	}
+	
+	.formField{
+		font: inherit; border: 1px solid #ccc; border-radius: 3px; margin: 3px 0 10px 0; padding: 3px 0}
+textarea.formField{
+	width: 300px; height: 70px}
+#sendBtn{
+	cursor:pointer;background: #ccc; background: linear-gradient(#ddd 0, #eee 100%); border: 1px solid #ccc; line-height: 32px; font-size: 14px;padding: 0 25px; border-radius: 3px}
+#send_form_status{
+	border: 1px dashed #ccc;display: none; padding: 0 10px; margin: 10px 0}
+.status_ok{
+	color: #060}
+.status_err{
+	color: #F00};
+
+
+
