@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wypieki</title>
+<meta name="description" content="Przepisy"/>
+<link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-firestore.js"></script>
+</head>
+<body>
+    <div id="wrapper"> 
+        <header>
+            <img src="wypieki1.jpg" alt="wypieki - header"/>
+        </header>
+       
+        <nav>
+        <a class="menu" href="index.html">Strona główna</a>
+        <a class="menu" href="Przepisy.html">Przepisy</a>
+        <a class="menu" href="Kontakt.html">Kontakt</a>
+        <a class="menu active" href="Wasze_wypieki.html">Wasze wypieki</a>
+        </nav>
+
+        <section>
+            <article>
+            <h1>Wasze wypieki</h1>
+            <!-- Formularz do dodawania przepisu -->
+            <section>
+              <article>
+                <h2>Dodaj Przepis</h2>
+                <form id="recipeForm">
+                  <label for="title">Tytuł:</label>
+                  <input type="text" id="title" name="title" required><br>
+          
+                  <label for="ingredients">Składniki:</label>
+                  <textarea id="ingredients" name="ingredients" required></textarea><br>
+          
+                  <label for="instructions">Instrukcje:</label>
+                  <textarea id="instructions" name="instructions" required></textarea><br>
+          
+                  <button type="submit">Dodaj Przepis</button>
+                </form>
+              </article>
+          
+              <article>
+                <h2>Lista Przepisów</h2>
+                <ul id="recipeList"></ul>
+              </article>
+            </section>
+          
+            <footer>
+              ©Strona stworzona przez Jakub Zyga
+            </footer>
+          </div>
+          
+          <script>
+            // Konfiguracja Firebase
+            const firebaseConfig = {
+                  apiKey: "AIzaSyCDwvouZSvSrN0fCqRf0k2t4lZ9bjNNGuY",
+                  authDomain: "recipes-dd4ac.firebaseapp.com",
+                  projectId: "recipes-dd4ac",
+                  storageBucket: "recipes-dd4ac.appspot.com",
+                  messagingSenderId: "312368896299",
+                  appId: "1:312368896299:web:5b55d18096b5784f360d6e",
+            };
+            firebase.initializeApp(firebaseConfig);
+          
+            // Pobierz referencję do kolekcji "recipes"
+            const recipesCollection = firebase.firestore().collection("recipes");
+          
+            // Obsługa przesyłania formularza
+            document.getElementById("recipeForm").addEventListener("submit", function (event) {
+              event.preventDefault();
+          
+              // Pobierz dane z formularza
+              const title = document.getElementById("title").value;
+              const ingredients = document.getElementById("ingredients").value.split("\n");
+              const instructions = document.getElementById("instructions").value;
+          
+              // Dodaj dokument do kolekcji
+              recipesCollection.add({
+                title: title,
+                ingredients: ingredients,
+                instructions: instructions
+              })
+              .then(() => {
+                alert("Przepis został dodany!");
+              })
+              .catch((error) => {
+                console.error("Błąd podczas dodawania przepisu:", error);
+              });
+            });
+          
+            // Pobierz i wyświetl listę przepisów
+            const recipeList = document.getElementById("recipeList");
+            recipesCollection.onSnapshot((snapshot) => {
+              recipeList.innerHTML = "";
+              snapshot.forEach((doc) => {
+                const recipeData = doc.data();
+                const listItem = document.createElement("li");
+                listItem.textContent = `${recipeData.title} - ${recipeData.ingredients.join(", ")}`;
+                recipeList.appendChild(listItem);
+              });
+            });
+          </script>
+          
+          </body>
+          </html>
