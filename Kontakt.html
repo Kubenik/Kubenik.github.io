@@ -6,7 +6,52 @@
 <title>Wypieki</title>
 <meta name'"description" content="Strona głowna"/>
 <link rel="stylesheet" href="style.css">
+<style>
+	body {
+		font-family: Arial, sans-serif;
+		background-color: #f4f4f4;
+		margin: 20px;
+	}
+
+	form {
+		max-width: 400px;
+		margin: 0 auto;
+		background-color: #fff;
+		padding: 20px;
+		border-radius: 5px;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	}
+
+	label {
+		display: block;
+		margin-bottom: 8px;
+	}
+
+	input, textarea {
+		width: 100%;
+		padding: 8px;
+		margin-bottom: 16px;
+		box-sizing: border-box;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+	}
+
+	button {
+		background-color: #4caf50;
+		color: #fff;
+		padding: 10px 15px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		font-size: 16px;
+	}
+
+	button:hover {
+		background-color: #CD7F32;
+	}
+</style>
 </head>
+<body>
 <body>
     <div id="wrapper"> 
        <header>
@@ -25,32 +70,75 @@
 	   </nav>
 	   
 	   <section>
+		
 	   <article>
-	   <h1>
-	   Skontaktuj się z nami!
-	   </h1>
-	   <h3>Formularz kontaktowy</h3>
-	   </div>
-<div id="send_form_status"></div>
-<form method="post" action="/send_form.php" id="contact_form">
-     <div><label for="name">Imię i nazwisko</label></div>
-     <div><input type="text" name="name" id="name" class="formField" /></div>
-     <div><label for="phone">Numer telefonu</label></div>
-     <div><input type="text" name="phone" id="phone" class="formField" /></div>
-     <div><label for="email">Adres email</label></div>
-     <div><input type="text" name="email" id="email" class="formField" /></div>
-     <div><label for="message">Treść wiadomości</label></div>
-     <div><textarea name="message" id="message" class="formField"></textarea></div>
-     <div><button id="sendBtn">Wyślij</button></div>
-</form>
+		<h1>
+			Wyślij mi wiadomość
+		</h1>
+
+		<form id="messageForm">
+			<label for="message">Message:</label>
+			<textarea id="message" name="message" required></textarea>
+	
+			<button type="submit">Send Message</button>
+		</form>
+	
+		<script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase-database.js"></script>
+		<script>
+			// Inicjalizacja Firebase
+			const firebaseConfig = {
+				apiKey: "AIzaSyCDwvouZSvSrN0fCqRf0k2t4lZ9bjNNGuY",
+            authDomain: "recipes-dd4ac.firebaseapp.com",
+            projectId: "recipes-dd4ac",
+            storageBucket: "recipes-dd4ac.appspot.com",
+            messagingSenderId: "312368896299",
+            appId: "1:312368896299:web:5b55d18096b5784f360d6e",
+    databaseURL: "https://recipes-dd4ac-default-rtdb.europe-west1.firebasedatabase.app"
+};
+
+	
+			firebase.initializeApp(firebaseConfig);
+			const auth = firebase.auth();
+			const database = firebase.database();
+	
+			// Obsługa formularza wiadomości
+			const messageForm = document.getElementById('messageForm');
+	
+			messageForm.addEventListener('submit', (e) => {
+				e.preventDefault();
+	
+				const user = auth.currentUser;
+	
+				if (user) {
+					const message = messageForm.message.value;
+	
+					// Zapisz wiadomość w bazie danych
+					database.ref('messages').push({
+						userId: user.uid,
+						email: user.email,
+						message: message,
+						timestamp: firebase.database.ServerValue.TIMESTAMP
+					});
+	
+					alert('Wiadomość wysłana!');
+				} else {
+					alert('Aby wysłać wiadomość, zaloguj się.');
+				}
+			});
+		</script>
+	
+	</html>
 	   </article>
 	   <div>
 	   <footer>
 		©Strona stworzona przez Jakub Zyga
 		</footer>
-		</section
+	</section>
 	</div>	
-
+	
+	
 
 </body>
 </html>

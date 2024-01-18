@@ -1,111 +1,211 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wypieki</title>
-<meta name="description" content="Przepisy"/>
-<link rel="stylesheet" href="style.css">
-<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-firestore.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wypieki</title>
+  <meta name="description" content="Przepisy"/>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Dodaj styl do zwiększenia odstępów między przepisami */
+    #recipeList li {
+      margin-bottom: 10px;
+      cursor: pointer; /* Dodaj kursor wskazujący na element interaktywny */
+    }
+
+    /* Dodaj styl do podświetlania na czerwono po najechaniu myszką */
+    #recipeList li:hover {
+      background-color: #ff0000;
+      color: #ffffff;
+    }
+
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-storage.js"></script>
 </head>
 <body>
-    <div id="wrapper"> 
-        <header>
-            <img src="wypieki1.jpg" alt="wypieki - header"/>
-        </header>
-       
-        <nav>
-        <a class="menu" href="index.html">Strona główna</a>
-        <a class="menu" href="Przepisy.html">Przepisy</a>
-        <a class="menu" href="Kontakt.html">Kontakt</a>
-        <a class="menu active" href="Wasze_wypieki.html">Wasze wypieki</a>
-        <a class="menu" href="Logowanie.html">Logowanie</a>
+  <div id="wrapper"> 
+    <header>
+      <img src="wypieki1.jpg" alt="wypieki - header"/>
+    </header>
+   
+    <nav>
+      <a class="menu" href="index.html">Strona główna</a>
+      <a class="menu" href="Przepisy.html">Przepisy</a>
+      <a class="menu" href="Kontakt.html">Kontakt</a>
+      <a class="menu active" href="Wasze_wypieki.html">Wasze wypieki</a>
+      <a class="menu" href="Logowanie.html">Logowanie</a>
+    </nav>
 
-        </nav>
-
+    <section>
+      <article>
+        <h1>Wasze wypieki</h1>
+        <!-- Formularz do dodawania przepisu z możliwością załączenia zdjęcia -->
         <section>
-            <article>
-            <h1>Wasze wypieki</h1>
-            <!-- Formularz do dodawania przepisu -->
-            <section>
-              <article id="article1">
-                <h2>Dodaj Przepis</h2>
-                <form id="recipeForm">
-                  <label for="title">Tytuł:</label>
-                  <input type="text" id="title" name="title" required><br>
-          
-                  <label for="ingredients">Składniki:</label>
-                  <textarea id="ingredients" name="ingredients" required></textarea><br>
-          
-                  <label for="instructions">Instrukcje:</label>
-                  <textarea id="instructions" name="instructions" required></textarea><br>
-          
-                  <button type="submit">Dodaj Przepis</button>
-                </form>
-              </article>
-          
-              <article>
-                <h2>Lista Przepisów</h2>
-                <ul id="recipeList"></ul>
-              </article>
-            </section>
-          
-            <footer>
-              ©Strona stworzona przez Jakub Zyga
-            </footer>
+          <article id="article1">
+            <h2>Dodaj Przepis</h2>
+            <form id="recipeForm">
+              <label for="title">Tytuł:</label>
+              <input type="text" id="title" name="title" required><br>
+      
+              <label for="ingredients">Składniki:</label>
+              <textarea id="ingredients" name="ingredients" required></textarea><br>
+      
+              <label for="instructions">Instrukcje:</label>
+              <textarea id="instructions" name="instructions" required></textarea><br>
+
+              <!-- Pole do wyboru zdjęcia -->
+              <label for="recipeImage">Zdjęcie przepisu:</label>
+              <input type="file" id="recipeImage" name="recipeImage" accept="image/*">
+      
+              <button type="submit">Dodaj Przepis</button>
+            </form>
+          </article>
+      
+          <article>
+            <h2>Lista Przepisów</h2>
+            <ul id="recipeList"></ul>
+          </article>
+        </section>
+
+        <!-- Miejsce do wyświetlania przepisu z obrazkiem -->
+        <article id="displayRecipe">
+          <h2>Wyświetlany Przepis</h2>
+          <div id="displayRecipeContent">
+            <h2 id="displayRecipeTitle"></h2>
+            <p id="displayRecipeIngredients"></p>
+            <p id="displayRecipeInstructions"></p>
           </div>
-          
-          <script>
-            // Konfiguracja Firebase
-            const firebaseConfig = {
-                  apiKey: "AIzaSyCDwvouZSvSrN0fCqRf0k2t4lZ9bjNNGuY",
-                  authDomain: "recipes-dd4ac.firebaseapp.com",
-                  projectId: "recipes-dd4ac",
-                  storageBucket: "recipes-dd4ac.appspot.com",
-                  messagingSenderId: "312368896299",
-                  appId: "1:312368896299:web:5b55d18096b5784f360d6e",
-            };
-            firebase.initializeApp(firebaseConfig);
-          
-            // Pobierz referencję do kolekcji "recipes"
-            const recipesCollection = firebase.firestore().collection("recipes");
-          
-            // Obsługa przesyłania formularza
-            document.getElementById("recipeForm").addEventListener("submit", function (event) {
-              event.preventDefault();
-          
-              // Pobierz dane z formularza
-              const title = document.getElementById("title").value;
-              const ingredients = document.getElementById("ingredients").value.split("\n");
-              const instructions = document.getElementById("instructions").value;
-          
-              // Dodaj dokument do kolekcji
-              recipesCollection.add({
-                title: title,
-                ingredients: ingredients,
-                instructions: instructions
-              })
-              .then(() => {
-                alert("Przepis został dodany!");
-              })
-              .catch((error) => {
-                console.error("Błąd podczas dodawania przepisu:", error);
+          <div id="displayRecipeImageContainer">
+            <img id="displayRecipeImage" alt="Zdjęcie przepisu">
+            <p id="noImageText" style="display: none;">Brak zdjęcia</p>
+          </div>
+        </article>
+      
+        <footer>
+          ©Strona stworzona przez Jakub Zyga
+        </footer>
+      
+        <script>
+          // Konfiguracja Firebase
+          const firebaseConfig = {
+            apiKey: "AIzaSyCDwvouZSvSrN0fCqRf0k2t4lZ9bjNNGuY",
+            authDomain: "recipes-dd4ac.firebaseapp.com",
+            projectId: "recipes-dd4ac",
+            storageBucket: "recipes-dd4ac.appspot.com",
+            messagingSenderId: "312368896299",
+            appId: "1:312368896299:web:5b55d18096b5784f360d6e",
+          };
+          firebase.initializeApp(firebaseConfig);
+      
+          // Pobierz referencję do kolekcji "recipes"
+          const recipesCollection = firebase.firestore().collection("recipes");
+      
+          // Obsługa przesyłania formularza
+          document.getElementById("recipeForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+      
+            // Pobierz dane z formularza
+            const title = document.getElementById("title").value;
+            const ingredients = document.getElementById("ingredients").value.split("\n");
+            const instructions = document.getElementById("instructions").value;
+            const imageFile = document.getElementById("recipeImage").files[0]; // Pobierz wybrany plik
+      
+            // Przesyłanie pliku do Firebase Storage
+            const storageRef = firebase.storage().ref('recipe_images/' + imageFile.name);
+            const uploadTask = storageRef.put(imageFile);
+      
+            uploadTask.on('state_changed', 
+              (snapshot) => {
+                // Śledź postęp przesyłania, jeśli to konieczne
+              },
+              (error) => {
+                console.error("Błąd podczas przesyłania zdjęcia:", error);
+              },
+              () => {
+                // Po zakończeniu przesyłania, pobierz URL zdjęcia i zapisz przepis w Firestore
+                uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                  // Zapisz przepis w Firestore wraz z URL zdjęcia
+                  recipesCollection.add({
+                    title: title,
+                    ingredients: ingredients,
+                    instructions: instructions,
+                    imageUrl: downloadURL, // URL zdjęcia
+                  })
+                  .then(() => {
+                    alert("Przepis został dodany!");
+                    // Czyść formularz lub wykonaj inne działania po dodaniu przepisu
+                  })
+                  .catch((error) => {
+                    console.error("Błąd podczas dodawania przepisu:", error);
+                  });
+                });
+              }
+            );
+          });
+      
+          // Pobierz i wyświetl listę przepisów
+          const recipeList = document.getElementById("recipeList");
+          const displayRecipeContent = document.getElementById("displayRecipeContent");
+          const displayRecipeImageContainer = document.getElementById("displayRecipeImageContainer");
+          const displayRecipeImage = document.getElementById("displayRecipeImage");
+          const noImageText = document.getElementById("noImageText");
+
+          recipesCollection.onSnapshot((snapshot) => {
+            recipeList.innerHTML = "";
+            snapshot.forEach((doc) => {
+              const recipeData = doc.data();
+              const listItem = document.createElement("li");
+              listItem.textContent = `${recipeData.title}`;
+              
+              // Dodaj obsługę wyświetlania przepisu z obrazkiem po kliknięciu na niego
+              listItem.addEventListener("click", () => {
+                // Ustaw tytuł
+                document.getElementById("displayRecipeTitle").textContent = recipeData.title;
+
+// Ustaw składniki
+const ingredientsParagraph = document.getElementById("displayRecipeIngredients");
+ingredientsParagraph.innerHTML = "<strong>Składniki:</strong><br>" + recipeData.ingredients.join("<br>");
+ingredientsParagraph.style.textAlign = "left"; // Ustaw tekst po lewej stronie
+ingredientsParagraph.style.float = "left"; // Ustawienie opływania tekstu wokół zdjecia
+
+// Ustaw instrukcje
+const instructionsParagraph = document.getElementById("displayRecipeInstructions");
+instructionsParagraph.innerHTML = "<strong>Instrukcje:</strong><br>" + recipeData.instructions;
+instructionsParagraph.style.textAlign = "left"; // Ustaw tekst po lewej stronie
+instructionsParagraph.style.clear = "left"; // Zastosuj "clear: left" aby uniknąć opływania tekstu przez obraz
+
+
+                // Sprawdź, czy zdjęcie zostało dodane, i wyświetl odpowiednią treść
+                if (recipeData.imageUrl) {
+                  displayRecipeImage.src = recipeData.imageUrl;
+                  noImageText.style.display = "none";
+                  displayRecipeImageContainer.style.display = "block"; // Pokaż kontener z obrazkiem
+                } else {
+                  noImageText.style.display = "block";
+                  displayRecipeImageContainer.style.display = "none"; // Ukryj kontener z obrazkiem
+                }
               });
-            });
-          
-            // Pobierz i wyświetl listę przepisów
-            const recipeList = document.getElementById("recipeList");
-            recipesCollection.onSnapshot((snapshot) => {
-              recipeList.innerHTML = "";
-              snapshot.forEach((doc) => {
-                const recipeData = doc.data();
-                const listItem = document.createElement("li");
-                listItem.textContent = `${recipeData.title} - ${recipeData.ingredients.join(", ")} - ${recipeData.instructions}`;
-                recipeList.appendChild(listItem);
+
+              // Dodaj obsługę podświetlania na czerwono po najechaniu myszką
+              listItem.addEventListener("mouseover", () => {
+                listItem.style.backgroundColor = "#ff0000";
+                listItem.style.color = "#ffffff";
               });
+
+              // Dodaj obsługę przywracania pierwotnych stylów po opuszczeniu myszką
+              listItem.addEventListener("mouseout", () => {
+                listItem.style.backgroundColor = "";
+                listItem.style.color = "";
+              });
+
+              recipeList.appendChild(listItem);
             });
-          </script>
-          
-          </body>
-          </html>
+          });
+        </script>
+      </article>
+    </section>
+  </div>
+</body>
+</html>
