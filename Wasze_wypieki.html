@@ -99,7 +99,7 @@
               snapshot.forEach((doc) => {
                 const recipeData = doc.data();
                 const listItem = document.createElement("li");
-                listItem.textContent = `${recipeData.title} - ${recipeData.ingredients.join(", ")}`;
+                listItem.textContent = `${recipeData.title} - ${recipeData.ingredients.join(", ")} - ${recipeData.instructions}`;
                 recipeList.appendChild(listItem);
               });
             });
