@@ -24,6 +24,7 @@
 	}
 	
 	
+	
 	a.menu {
 		display: inline-block;
 		width: 33%;
@@ -44,6 +45,23 @@
 		margin-bottom: 20px;
 	}
 	
+	#article1{
+		 
+		margin: 0px auto; /* Ustawienie marginesów i automatyczne centrowanie */
+		padding: 20px;
+		background-color: #fff;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		border: 2px solid crimson;
+		border-radius: 8px;
+		width: 70%;
+		  }
+	
+		  
+	#recipeForm{
+		max-width: 700px; /* Maksymalna szerokość formularza */
+  		margin: 50px 350px; /* Centrowanie formularza */
+	}
+
 	article h1 {
 		font-size:30px;
 		text-align: center;
@@ -69,7 +87,6 @@
 		
 
 	}
-	
 	
 	
 	article p {
@@ -121,5 +138,23 @@ textarea.formField{
 .status_err{
 	color: #F00};
 
+	#article1 button {
+		display: inline-block;
+		padding: 10px 20px;
+		font-size: 16px;
+		font-weight: bold;
+		text-align: center;
+		text-decoration: none;
+		background-color: crimson;
+		color: #fff;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		transition: background-color 0.3s;
+	  }
+  
+	  #article1 button:hover {
+		background-color: #CD7F32;
+	  }
 
 
